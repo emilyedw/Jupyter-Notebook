@@ -9,11 +9,11 @@
    "cells": [
     {
      "cell_type": "markdown", 
-     "source": "Using Python to see how the *Times* talks about men and women\n----------\nNeal Caren - University of North Carolina, Chapel Hill\n[mail](mailto:neal.caren@unc.edu)\n[web](http://nealcaren.web.unc.edu)\n[twitter](http://twitter.com/HaphazardSoc)\n[scholar](http://scholar.google.com/citations?user=cy0u16kAAAAJ&hl=en)\n\nDo men and women come up in different contexts in the newspaper? One quick way to answer that \nquestion\nis to compare the words in sentences that discuss women with the words in sentences that\ndiscuss men. Here's an example of how to do this sort of analysis using Python. \n\nThe data comes from last week's (February 27, 2013-March 6, 2013) *New York Times*. I downloaded\nall the articles available through LexisNexis--except for the corrections and paid\nobituaries. This totals 1,379 articles, or about 200 per day. Using a modified version of an old Python \n[script](http://nealcaren.web.unc.edu/cleaning-up-lexisnexis-files/), I removed all the\nmetadata and put the text\nof each article in its own file and placed all of them in a folder called `articles`. \nIt is not the most efficient way to go about it, but sometimes the text data comes that way\nso I thought I would be useful to set it up that way for didactic purposes. "
+     "source": "Using Python to see how the *Times* talks about men and women\n----------\nNeal Caren - University of North Carolina, Chapel Hill\n[mail](mailto:neal.caren@unc.edu)\n[web](http://nealcaren.web.unc.edu)\n[twitter](http://twitter.com/HaphazardSoc)\n[scholar](http://scholar.google.com/citations?user=cy0u16kAAAAJ&hl=en)\n\nDo men and women come up in different contexts in the newspaper? One quick way to answer that \nquestion\nis to compare the words in sentences that discuss women with the words in sentences that\ndiscuss men. Here's an example of how to do this sort of analysis using Python. \n\nThe data comes from last week's (February 27, 2013-March 6, 2013) *New York Times*. I downloaded\nall the articles available through LexisNexis excluding only the corrections and paid\nobituaries. This totals 1,379 articles, or about 200 per day. Using a modified version of an old Python \n[script](http://nealcaren.web.unc.edu/cleaning-up-lexisnexis-files/), I removed all the\nmetadata. put the text\nof each article in its own file, and placed all of the text files in a folder called `articles`. \nIt is not the most efficient way to go about it, but sometimes the text data comes that way\nso I thought I would be useful to set it up that way for didactic purposes. "
     }, 
     {
      "cell_type": "markdown", 
-     "source": "First we want to load a few modules. \nThe only one that you might need to download is [`nltk`](http://nltk.org),\nwhich is a powerful suite for text processing. \nI just use the part that splits text into sentences. `Glob` is a module that is useful for\nretrieving the contents of a directory, and `string.punctuation` is just a string with all the \nASCII punctuation marks (`!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~`). "
+     "source": "We begin by loading a few modules. \nThe only modules that you might need to install is [`nltk`](http://nltk.org),\nwhich is a powerful suite for text processing and analysis. \nFor this analysis, I'm only using the `NLTK` function that splits text into sentences.\n`glob` is a useful module for \nretrieving the contents of a directory, and `string.punctuation` is just a string with all the \nASCII punctuation marks, that is `!\"#$%&'()*+,-/:;<=>?@[\\]^_`{|}~. "
     }, 
     {
      "cell_type": "code", 
@@ -25,7 +25,7 @@
     }, 
     {
      "cell_type": "markdown", 
-     "source": "The heart of the analysis will be figuring out whether a sentence is talking about\na man, woman, both or neither. As a first pass, I'm going to assume that the sentence\nis  talking about man if it uses\nwords like, \"he\", \"dad\" or \"Mr.\", and is probably talking about a woman if it uses\nwords like, \"she\", \"mother\", or \"Ms.\". It isn't perfect, but depending on the text, it can be quite useful.\nRather than start from scratch, I build off of  Danielle Sucher's list from her \n[Jailbreak the Patriarchy](https://github.com/DanielleSucher/Jailbreak-the-Patriarchy)\nbrowser plugin."
+     "source": "The heart of the analysis will be figuring out whether a sentence is talking about\na man, woman, both or neither. As a first pass, I'm going to assume that the sentence\nis  talking about man if it uses\nwords like, \"he\", \"dad\" or \"Mr.\", and is probably talking about a woman if it uses\nwords like, \"she\", \"mother\", or \"Ms.\". It isn't perfect, but depending on the text, it can be quite useful.\nRather than start from scratch, I build off of  [Danielle Sucher](http://twitter.com/DanielleSucher)'s list from her \n[Jailbreak the Patriarchy](https://github.com/DanielleSucher/Jailbreak-the-Patriarchy)\nbrowser plugin."
     }, 
     {
      "cell_type": "code", 
@@ -37,7 +37,7 @@
     }, 
     {
      "cell_type": "markdown", 
-     "source": "I'm storing them as sets rather than lists because later on I want to look at whether or not words in\na sentence overlap with the words in these lists.  The function below \ntakes a work list and returns the gender of the person\nbeing talked about, if any, based on the number of words a sentence has in common\nwith either the male or female word lists."
+     "source": "I'm storing them as sets rather than lists because later on I want to look at whether or not words in\na sentence overlap with these words, and Python will return the intersection of sets, but not lists.\n\nThe function below \ntakes a work list and returns the gender of the person\nbeing talked about, if any, based on the number of words a sentence has in common\nwith either the male or female word lists."
     }, 
     {
      "cell_type": "code", 
@@ -49,12 +49,12 @@
     }, 
     {
      "cell_type": "markdown", 
-     "source": "I don't really care about proper nouns, especially people's names, so I need a way to identify them. To do that, \nI'm going to count how many times a word's first letter is capitalized and how many times\nit isn't. With a large enough text and if you ignore the first words of sentences, this is \npretty robust way to identify proper nouns."
+     "source": "I don't really care about proper nouns, especially people's names (e.g. it is boring that 'Boehner' is always male), so I need a way to identify them. To do that, \nI'm going to count how many times a word's first letter is capitalized and how many times\nit isn't. With a large enough text and if you ignore the first words of sentences, this is \npretty robust way to identify proper nouns."
     }, 
     {
      "cell_type": "code", 
      "collapsed": true, 
-     "input": "def is_it_proper(word):\n        if word[0]==word[0].upper():\n            case='upper'\n        else:\n            case='lower'\n        \n        word_lower=word.lower()\n        try:\n            proper_nouns[word_lower][case]= proper_nouns[word_lower].get(case,0)+1\n        except Exception,e:\n            #This is triggered when the word hasn't been seen yet\n            proper_nouns[word_lower]= {case:1}", 
+     "input": "def is_it_proper(word):\n        if word[0]==word[0].upper():\n            case='upper'\n        else:\n            case='lower'\n        \n        word_lower=word.lower()\n        try:\n            proper_nouns[word_lower][case] = proper_nouns[word_lower].get(case,0)+1\n        except Exception,e:\n            #This is triggered when the word hasn't been seen yet\n            proper_nouns[word_lower]= {case:1}", 
      "language": "python", 
      "outputs": [], 
      "prompt_number": 38
@@ -102,7 +102,7 @@
     {
      "cell_type": "code", 
      "collapsed": true, 
-     "input": "\nfor file_name in file_list:\n    #Open the file\n    text=open(file_name,'rb').read()\n    \n    #Split into sentences\n    sentences=tokenizer.tokenize(text)\n    \n    for sentence in sentences:\n        #word tokenize and strip punctuation\n            sentence_words=sentence.split()\n            sentence_words=[w.strip(punctuation) for w in sentence_words if len(w.strip(punctuation))>0]\n            \n            #figure out how often each word is capitalized\n            [is_it_proper(word) for word in sentence_words[1:]]\n\n            #lower case it\n            sentence_words=set([w.lower() for w in sentence_words])\n            \n            #Figure out if there are gendered words in the sentence by computing the length of the intersection of the sets\n            gender=gender_the_sentence(sentence_words)\n\n            #Increment some counters\n            increment_gender(sentence_words,gender)", 
+     "input": "\nfor file_name in file_list:\n    #Open the file\n    text=open(file_name,'rb').read()\n    \n    #Split into sentences\n    sentences=tokenizer.tokenize(text)\n    \n    for sentence in sentences:\n        #word tokenize and strip punctuation\n            sentence_words=sentence.split()\n            sentence_words=[w.strip(punctuation) for w in sentence_words \n                            if len(w.strip(punctuation))>0]\n            \n            #figure out how often each word is capitalized\n            [is_it_proper(word) for word in sentence_words[1:]]\n\n            #lower case it\n            sentence_words=set([w.lower() for w in sentence_words])\n            \n            #Figure out if there are gendered words in the sentence by computing the length of the intersection of the sets\n            gender=gender_the_sentence(sentence_words)\n\n            #Increment some counters\n            increment_gender(sentence_words,gender)", 
      "language": "python", 
      "outputs": [], 
      "prompt_number": 42
@@ -114,7 +114,7 @@
     {
      "cell_type": "code", 
      "collapsed": true, 
-     "input": "proper_nouns=set([word for word in proper_nouns if  \n                  proper_nouns[word].get('upper',0) / \n                  (proper_nouns[word].get('upper',0)+proper_nouns[word].get('lower',0))>.50])", 
+     "input": "proper_nouns=set([word for word in proper_nouns if  \n                  proper_nouns[word].get('upper',0) / \n                  (proper_nouns[word].get('upper',0) + \n                   proper_nouns[word].get('lower',0))>.50])", 
      "language": "python", 
      "outputs": [], 
      "prompt_number": 43
@@ -126,7 +126,7 @@
     {
      "cell_type": "code", 
      "collapsed": true, 
-     "input": "common_words=set([w for w in sorted (word_freq['female'],key=word_freq['female'].get,reverse=True)[:1000]]+[w for w in sorted (word_freq['male'],key=word_freq['male'].get,reverse=True)[:1000]])\n\ncommon_words=list(common_words-male_words-female_words-proper_nouns)", 
+     "input": "common_words=set([w for w in sorted (word_freq['female'],\n                                     key=word_freq['female'].get,reverse=True)[:1000]]+[w for w in sorted (word_freq['male'],key=word_freq['male'].get,reverse=True)[:1000]])\n\ncommon_words=list(common_words-male_words-female_words-proper_nouns)", 
      "language": "python", 
      "outputs": [], 
      "prompt_number": 44
@@ -138,7 +138,7 @@
     {
      "cell_type": "code", 
      "collapsed": true, 
-     "input": "male_percent={word:(word_freq['male'].get(word,0)/word_counter['male'])/(word_freq['female'].get(word,0)/word_counter['female']+word_freq['male'].get(word,0)/word_counter['male']) for word in common_words}", 
+     "input": "male_percent={word:(word_freq['male'].get(word,0) / word_counter['male']) \n              / (word_freq['female'].get(word,0) / word_counter['female']+word_freq['male'].get(word,0)/word_counter['male']) for word in common_words}", 
      "language": "python", 
      "outputs": [], 
      "prompt_number": 45
@@ -186,7 +186,7 @@
     {
      "cell_type": "code", 
      "collapsed": true, 
-     "input": "outfile_name='gender.tsv'\ntsv_outfile=open(outfile_name,'wb')\nheader='percent_male\\tmale_count\\tfemalecount\\tword\\n'\ntsv_outfile.write(header)\nfor word in common_words:\n    row = '%.2f\\t%01d\\t%01d\\t%s\\n' % (100*male_percent[word],word_freq['male'].get(word,0),word_freq['female'].get(word,0),word)\n    tsv_outfile.write(row)\ntsv_outfile.close()\n    ", 
+     "input": "outfile_name='gender.tsv'\ntsv_outfile=open(outfile_name,'wb')\nheader='percent_male\\tmale_count\\tfemalecount\\tword\\n'\ntsv_outfile.write(header)\nfor word in common_words:\n    row = '%.2f\\t%01d\\t%01d\\t%s\\n' % (100*male_percent[word],word_freq['male'].get(word,0),word_freq['female'].get(word,0),word)\n    tsv_outfile.write(row)\ntsv_outfile.close()", 
      "language": "python", 
      "outputs": [], 
      "prompt_number": 48
@@ -216,7 +216,7 @@
     }, 
     {
      "cell_type": "markdown", 
-     "source": "While there's a couple of interesting findings here, for the most part, the basic building blocks\nof sentences are fairly similarly in the two types of sentences. Now, this is just based on\nword frequencies, and a more nuanced examination would probably discover additionally findings of interest.\nFor example, my guess is that that 'work', near the bottom of this list, is used not only more\nfrequently in the female subject sentences, but also in a different context and as a different\npart of speech (e.g. 'men work', 'women juggle home and work responsibilities.'). Comparing\nword frequencies only gets you so far, but it is pretty quick and easy way to \nconduct some preliminary data analysis."
+     "source": "While there's a couple of interesting findings here, for the most part, the basic building blocks\nof sentences are fairly similarly in the male and female subject sentences. Now, this is just based on\nword frequencies, and a more nuanced examination would probably discover additionally findings of interest.\nFor example, my guess is that that 'work', near the bottom of this list, is used not only more\nfrequently in the female subject sentences, but also in a different context and as a different\npart of speech (e.g. 'men work', 'women juggle home and work responsibilities.'). Comparing\nword frequencies only gets you so far, but it is pretty quick and easy way to \nconduct some preliminary data analysis."
     }
    ]
   }
